@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BackEnd.Models;
+using BackEnd.Data;
+using ConferenceDTO;
+using BackEnd.Data.Infrastructure;
 
 namespace BackEnd.Controllers
 {
@@ -13,93 +15,96 @@ namespace BackEnd.Controllers
     [ApiController]
     public class SpeakersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public SpeakersController(ApplicationDbContext context)
+        public SpeakersController(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: api/Speakers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Speaker>>> GetSpeakers()
+        public async Task<ActionResult<List<SpeakerResponse>>> GetSpeakers()
         {
-            return await _context.Speakers.ToListAsync();
+            var speakers = await _db.Speakers.AsNoTracking()
+                                             .Include(s => s.SessionSpeakers)
+                                                .ThenInclude(ss => ss.Session)
+                                             .Select(s => s.MapSpeakerResponse())
+                                             .ToListAsync();
+
+            return speakers;
         }
 
-        // GET: api/Speakers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Speaker>> GetSpeaker(int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<SpeakerResponse>> GetSpeaker(int id)
         {
-            var speaker = await _context.Speakers.FindAsync(id);
+            var speaker = await _db.Speakers.AsNoTracking()
+                                            .Include(s => s.SessionSpeakers)
+                                                .ThenInclude(ss => ss.Session)
+                                            .SingleOrDefaultAsync(s => s.ID == id);
 
             if (speaker == null)
             {
                 return NotFound();
             }
 
-            return speaker;
+            var result = speaker.MapSpeakerResponse();
+            return result;
         }
 
-        // PUT: api/Speakers/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpeaker(int id, Speaker speaker)
+        [HttpPost]
+        public async Task<IActionResult> CreateSpeaker(ConferenceDTO.Speaker input)
         {
-            if (id != speaker.ID)
+            var speaker = new Data.Speaker
             {
-                return BadRequest();
+                Name = input.Name,
+                WebSite = input.WebSite,
+                Bio = input.Bio
+            };
+
+            _db.Speakers.Add(speaker);
+            await _db.SaveChangesAsync();
+
+            var result = speaker.MapSpeakerResponse();
+
+            return CreatedAtAction(nameof(GetSpeaker), new { id = speaker.ID }, result);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> PutSpeaker(int id, ConferenceDTO.Speaker input)
+        {
+            var speaker = await _db.FindAsync<Data.Speaker>(id);
+
+            if (speaker == null)
+            {
+                return NotFound();
             }
 
-            _context.Entry(speaker).State = EntityState.Modified;
+            speaker.Name = input.Name;
+            speaker.WebSite = input.WebSite;
+            speaker.Bio = input.Bio;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SpeakerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            // TODO: Handle exceptions, e.g. concurrency
+            await _db.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Speakers
-        [HttpPost]
-        public async Task<ActionResult<Speaker>> PostSpeaker(Speaker speaker)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<SpeakerResponse>> DeleteSpeaker(int id)
         {
-            _context.Speakers.Add(speaker);
-            await _context.SaveChangesAsync();
+            var speaker = await _db.FindAsync<Data.Speaker>(id);
 
-            return CreatedAtAction("GetSpeaker", new { id = speaker.ID }, speaker);
-        }
-
-        // DELETE: api/Speakers/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Speaker>> DeleteSpeaker(int id)
-        {
-            var speaker = await _context.Speakers.FindAsync(id);
             if (speaker == null)
             {
                 return NotFound();
             }
 
-            _context.Speakers.Remove(speaker);
-            await _context.SaveChangesAsync();
+            _db.Remove(speaker);
 
-            return speaker;
-        }
+            // TODO: Handle exceptions, e.g. concurrency
+            await _db.SaveChangesAsync();
 
-        private bool SpeakerExists(int id)
-        {
-            return _context.Speakers.Any(e => e.ID == id);
+            return speaker.MapSpeakerResponse();
         }
     }
 }

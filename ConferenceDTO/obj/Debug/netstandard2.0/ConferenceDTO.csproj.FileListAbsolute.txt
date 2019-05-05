@@ -1,0 +1,8 @@
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\bin\Debug\netstandard2.0\ConferenceDTO.deps.json
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\bin\Debug\netstandard2.0\ConferenceDTO.dll
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\obj\Debug\netstandard2.0\ConferenceDTO.csproj.CoreCompileInputs.cache
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\obj\Debug\netstandard2.0\ConferenceDTO.AssemblyInfoInputs.cache
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\obj\Debug\netstandard2.0\ConferenceDTO.AssemblyInfo.cs
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\bin\Debug\netstandard2.0\ConferenceDTO.pdb
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\obj\Debug\netstandard2.0\ConferenceDTO.dll
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\ConferenceDTO\obj\Debug\netstandard2.0\ConferenceDTO.pdb

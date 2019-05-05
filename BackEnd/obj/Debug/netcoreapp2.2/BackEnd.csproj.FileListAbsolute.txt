@@ -11,3 +11,7 @@ C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\obj\Debug\netcor
 C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\bin\Debug\netcoreapp2.2\BackEnd.pdb
 C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.dll
 C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.pdb
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\bin\Debug\netcoreapp2.2\ConferenceDTO.dll
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\bin\Debug\netcoreapp2.2\ConferenceDTO.pdb
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.csprojAssemblyReference.cache
+C:\Moje\TK_MOJE\GIT\ConferencePlanner\ConferencePlanner\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.csproj.CopyComplete
