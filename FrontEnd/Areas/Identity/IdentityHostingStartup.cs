@@ -19,9 +19,18 @@ namespace FrontEnd.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityDbContextConnection")));
 
-                services.AddDefaultIdentity<User>()
+                services.AddDefaultIdentity<User>(options =>
+                    {
+                        options.Password.RequireDigit = false;
+                        options.Password.RequiredLength = 1;
+                        options.Password.RequiredUniqueChars = 0;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequireUppercase = false;
+                        options.Password.RequireNonAlphanumeric = false;
+                    })
                     .AddDefaultUI(UIFramework.Bootstrap4)
-                    .AddEntityFrameworkStores<IdentityDbContext>();
+                    .AddEntityFrameworkStores<IdentityDbContext>()
+                    .AddClaimsPrincipalFactory<ClaimsPrincipalFactory>(); //uprava service kvoli claims
             });
         }
     }

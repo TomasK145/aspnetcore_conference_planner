@@ -33,11 +33,27 @@ namespace FrontEnd
                 client.BaseAddress = new Uri(Configuration["serviceUrl"]); //konfiguracna hodnota ulozena v appsettings.json 
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireAuthenticatedUser()
+                          .RequireIsAdminClaim();
+                });
+            });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AuthorizeFolder("/Admin", "Admin"); //zabezpecenie folderu
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //definovanie dependency injection
             services.AddSingleton<IAdminService, AdminService>();
+
+            //If you run the app at this point, you'll see an exception stating that you can't inject a scoped type into a type registered as a singleton.
+            //This is the DI system protecting you from a common anti - pattern that can arise when using IoC containers. 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,12 +70,12 @@ namespace FrontEnd
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            //app.UseCookiePolicy(); //sposobovalo nezobrazovanie info message
             app.UseStaticFiles();
-            app.UseCookiePolicy();
-
+            
             app.UseAuthentication(); //autentifikacny middleware
-
+                        
             app.UseMvc();
         }
     }

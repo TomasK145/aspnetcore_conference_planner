@@ -1,5 +1,6 @@
 ﻿using FrontEnd.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,19 @@ namespace FrontEnd.Services
     public class AdminService : IAdminService
     {
         private readonly Lazy<long> _creationKey = new Lazy<long>(() => BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 7));
-        private readonly IdentityDbContext _dbContext;
+        //If you run the app at this point, you'll see an exception stating that you can't inject a scoped type into a type registered as a singleton.
+        //This is the DI system protecting you from a common anti - pattern that can arise when using IoC containers. 
+        //private readonly IdentityDbContext _dbContext;
+        private readonly IServiceProvider _serviceProvider;
         private bool _adminExists;
 
-        public AdminService(IdentityDbContext dbContext)
+        //public AdminService(IdentityDbContext dbContext)
+        //{
+        //    _dbContext = dbContext;
+        //}
+        public AdminService(IServiceProvider serviceProvider)
         {
-            _dbContext = dbContext;
+            _serviceProvider = serviceProvider;
         }
 
         public long CreationKey => _creationKey.Value;
@@ -28,15 +36,22 @@ namespace FrontEnd.Services
             }
             else
             {
-                if (await _dbContext.Users.AnyAsync(user => user.IsAdmin))
+                //create a service scope so we can ask for an instance of the IdentityDbContext within a scoped context
+                //mozne fixnut problem s DI pri roznych: AddScoped, AddSingleton, AddTransient
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    // There are already admin users so disable admin creation
-                    _adminExists = true;
-                    return false;
-                }
+                    var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
 
-                // There are no admin users so enable admin creation
-                return true;
+                    if (await dbContext.Users.AnyAsync(user => user.IsAdmin))
+                    {
+                        // There are already admin users so disable admin creation
+                        _adminExists = true;
+                        return false;
+                    }
+
+                    // There are no admin users so enable admin creation
+                    return true;
+                }
             }
         }
     }
