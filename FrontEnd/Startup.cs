@@ -1,3 +1,4 @@
+using FrontEnd.Filters;
 using FrontEnd.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,7 +43,10 @@ namespace FrontEnd
                 });
             });
 
-            services.AddMvc()
+            services.AddMvc(options =>
+                {
+                    options.Filters.AddService<RequireLoginFilter>();
+                })
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AuthorizeFolder("/Admin", "Admin"); //zabezpecenie folderu
@@ -51,6 +55,7 @@ namespace FrontEnd
 
             //definovanie dependency injection
             services.AddSingleton<IAdminService, AdminService>();
+            services.AddTransient<RequireLoginFilter>();
 
             //If you run the app at this point, you'll see an exception stating that you can't inject a scoped type into a type registered as a singleton.
             //This is the DI system protecting you from a common anti - pattern that can arise when using IoC containers. 

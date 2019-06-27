@@ -1,5 +1,6 @@
 ﻿using ConferenceDTO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -125,6 +126,44 @@ namespace FrontEnd.Services
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<List<SearchResult>>();
+        }
+
+        public async Task AddSessionToAttendeeAsync(string name, int sessionId)
+        {
+            var response = await _httpClient.PostAsync($"/api/attendees/{name}/session/{sessionId}", null);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task RemoveSessionFromAttendeeAsync(string name, int sessionId)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/attendees/{name}/session/{sessionId}");
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<List<SessionResponse>> GetSessionsByAttendeeAsync(string name)
+        {
+            // TODO: Would be better to add backend API for this
+
+            var sessionsTask = GetSessionsAsync();
+            var attendeeTask = GetAttendeeAsync(name);
+
+            await Task.WhenAll(sessionsTask, attendeeTask);
+
+            var sessions = await sessionsTask;
+            var attendee = await attendeeTask;
+
+            if (attendee == null)
+            {
+                return new List<SessionResponse>();
+            }
+
+            var sessionIds = attendee.Sessions.Select(s => s.ID);
+
+            sessions.RemoveAll(s => !sessionIds.Contains(s.ID));
+
+            return sessions;
         }
     }
 }
