@@ -35,6 +35,9 @@ namespace FrontEnd
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //definovanie dependency injection
+            services.AddSingleton<IAdminService, AdminService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +57,8 @@ namespace FrontEnd
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication(); //autentifikacny middleware
 
             app.UseMvc();
         }
