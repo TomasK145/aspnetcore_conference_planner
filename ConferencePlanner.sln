@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConferenceDTO", "Conference
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{1E4B2A1E-9EAF-4C5F-9FBD-AE30F5C0B607}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEndSpa", "FrontEndSpa\FrontEndSpa.csproj", "{559D32F5-3127-4971-A1A4-87356267432A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1E4B2A1E-9EAF-4C5F-9FBD-AE30F5C0B607}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E4B2A1E-9EAF-4C5F-9FBD-AE30F5C0B607}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E4B2A1E-9EAF-4C5F-9FBD-AE30F5C0B607}.Release|Any CPU.Build.0 = Release|Any CPU
+		{559D32F5-3127-4971-A1A4-87356267432A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{559D32F5-3127-4971-A1A4-87356267432A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{559D32F5-3127-4971-A1A4-87356267432A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{559D32F5-3127-4971-A1A4-87356267432A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
