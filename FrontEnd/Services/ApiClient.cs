@@ -1,4 +1,5 @@
 ﻿using ConferenceDTO;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,12 @@ namespace FrontEnd.Services
     public class ApiClient : IApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<ApiClient> _logger;
 
-        public ApiClient(HttpClient httpClient)
+        public ApiClient(HttpClient httpClient, ILogger<ApiClient> logger)
         {
             _httpClient = httpClient;
+            _logger = logger;
         }
 
         public async Task<bool> AddAttendeeAsync(Attendee attendee)
@@ -67,6 +70,8 @@ namespace FrontEnd.Services
         public async Task<List<SessionResponse>> GetSessionsAsync()
         {
             var response = await _httpClient.GetAsync("/api/sessions");
+
+            _logger.LogWarning("read session");
 
             response.EnsureSuccessStatusCode();
 
