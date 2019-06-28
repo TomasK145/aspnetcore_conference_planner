@@ -29,7 +29,7 @@ namespace FrontEnd
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            }); 
 
             services.AddHttpClient<IApiClient, ApiClient>(client => //konfiguracia ApiClienta
             {
