@@ -46,6 +46,8 @@ namespace BackEnd
             services.AddSwaggerGen(options =>
                 options.SwaggerDoc("v1", new Info { Title = "Conference Planner API", Version = "v1" })
             );
+
+            services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>(); //pridanie health check
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +70,8 @@ namespace BackEnd
             app.UseSwaggerUI(options =>
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Conference Planner API v1")
             );
+
+            app.UseHealthChecks("/health"); //pridanie health check +endpoint pre kontrolu
 
             app.UseMvc();
 

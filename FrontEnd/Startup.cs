@@ -1,4 +1,6 @@
+using FrontEnd.Data;
 using FrontEnd.Filters;
+using FrontEnd.HealthChecks;
 using FrontEnd.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +55,10 @@ namespace FrontEnd
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddHealthChecks() //health check
+                    .AddCheck<BackendHealthCheck>("backend") //moznost kontroly BE health checku z FE
+                    .AddDbContextCheck<IdentityDbContext>();
+
             //definovanie dependency injection
             services.AddSingleton<IAdminService, AdminService>();
             services.AddTransient<RequireLoginFilter>();
@@ -78,7 +84,8 @@ namespace FrontEnd
             //app.UseHttpsRedirection();
             //app.UseCookiePolicy(); //sposobovalo nezobrazovanie info message
             app.UseStaticFiles();
-            
+            app.UseHealthChecks("/health");
+
             app.UseAuthentication(); //autentifikacny middleware
                         
             app.UseMvc();

@@ -1,4 +1,5 @@
 ﻿using ConferenceDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -164,6 +165,20 @@ namespace FrontEnd.Services
             sessions.RemoveAll(s => !sessionIds.Contains(s.ID));
 
             return sessions;
+        }
+
+        public async Task<bool> CheckHealthAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetStringAsync("/health");
+
+                return string.Equals(response, "Healthy", StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
